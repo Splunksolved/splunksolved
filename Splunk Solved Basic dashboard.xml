@@ -1,0 +1,170 @@
+<dashboard version="1.1" theme="light">
+  <label>Splunk Solved Basic dashboard</label>
+  <row>
+    <panel>
+      <single>
+        <search>
+          <query>|tstats count where index=_internal by _time
+| stats count</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="rangeColors">["0x1182f3","0x118832","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <search>
+          <query>| tstats count where index=_internal by _time
+| timechart sum(count)</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="rangeColors">["0x1182f3","0x118832","0xf1813f","0xdc4e41"]</option>
+        <option name="rangeValues">[0,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="useColors">1</option>
+      </single>
+      <single>
+        <search>
+          <query>|tstats count where index=_introspection by _time
+| timechart sum(count)</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="rangeColors">["0x1182f3","0x1182f3"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="unit">$</option>
+        <option name="unitPosition">before</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+      <single>
+        <search>
+          <query>|tstats count where index=_audit by _time
+| stats avg(count)</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">block</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="rangeColors">["0xcba700","0xcba700"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="unit">$</option>
+        <option name="unitPosition">before</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <chart>
+        <search>
+          <query>index=_introspection
+|stats sum(data.pct_memory)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">markerGauge</option>
+        <option name="charting.chart.rangeValues">[0,5000,7000,10000]</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.gaugeColors">["0x118832","0xcba700","0xd41f1f"]</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <search>
+          <query>index=_internal
+|stats avg(bytes)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">radialGauge</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <search>
+          <query>index=_audit
+|stats count by user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.chart.sliceCollapsingThreshold">1</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Maximum bytes by group</title>
+      <chart>
+        <search>
+          <query>index=_* bytes!="" index=_internal
+|stats max(bytes) by group
+| fields - NULL OTHER
+| head 10</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>top 15 info</title>
+      <chart>
+        <search>
+          <query>index=_audit
+|stats count by info
+| head 15</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>event count by action</title>
+      <chart>
+        <search>
+          <query>index=_audit
+|stats count by action</query>
+          <earliest>-7d@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>
