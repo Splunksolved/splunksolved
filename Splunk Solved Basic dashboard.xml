@@ -167,4 +167,41 @@
       </chart>
     </panel>
   </row>
+  <row>
+    <panel>
+      <map>
+        <search>
+          <query>| makeresults 
+| eval laptop_latitude="43.075968,38.597626,43.78444,47.751074,44.558803"
+| makemv delim="," laptop_latitude 
+| mvexpand laptop_latitude
+| eval laptop_longitude="-107.290284,-80.454903,-88.787868,-120.740139,-72.577841"
+| makemv delim="," laptop_longitude
+| mvexpand laptop_longitude
+| geostats count latfield=laptop_latitude longfield=laptop_longitude</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="mapping.type">marker</option>
+      </map>
+    </panel>
+    <panel>
+      <map>
+        <search>
+          <query>| makeresults 
+| eval ip_address="182.236.164.11,198.35.1.75,71.192.86.205,91.205.189.15,195.2.240.99,74.53.23.135,27.101.11.11,12.130.60.5,211.245.24.3,70.38.1.235"
+| makemv delim="," ip_address 
+| mvexpand ip_address
+| iplocation ip_address
+| stats count by Country
+| geom geo_countries featureIdField=Country</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="mapping.type">choropleth</option>
+      </map>
+    </panel>
+  </row>
 </dashboard>
